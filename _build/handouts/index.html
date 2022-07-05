@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Markov Chains: Discord | Devmountain Foundations</title>
+
+      <link
+        href="_static/pygments.css"
+        rel="stylesheet"
+        type="text/css"
+      />
+      <link href="_static/devmountain.css" rel="stylesheet" type="text/css" />
+          <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+          <link rel="stylesheet" type="text/css" href="_static/devmountain.css" />
+          <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+          <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+
+      <script src="_static/pdfobject.min.js"></script>
+      
+  </head>
+  <body>
+      <div id="handouts-container">
+        <header id="page-header">
+            <p id="project-title">Devmountain Foundations</p>
+            <p id="page-title">Markov Chains: Discord</p>
+              <p id="backlink">
+                <a href="/"> &laquo; Back to Homepage </a>
+              </p>
+        </header>
+
+        <nav id="page-toc"><ul>
+<li><a class="reference internal" href="#">Markov Chains: Discord</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#get-an-auth-token-keep-it-secret">Get an Auth Token &amp; Keep it Secret</a><ul>
+<li><a class="reference internal" href="#create-a-bot-account-on-discord">Create a Bot Account on Discord</a></li>
+<li><a class="reference internal" href="#keep-your-token-secret">Keep Your Token Secret</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#install-project-dependencies">Install Project Dependencies</a><ul>
+<li><a class="reference internal" href="#create-and-activate-a-virtual-environment">Create and Activate a Virtual Environment</a></li>
+<li><a class="reference internal" href="#install-discord-py">Install <cite>discord.py</cite></a></li>
+<li><a class="reference internal" href="#make-requirements-txt">Make <cite>requirements.txt</cite></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#make-a-discord-bot">Make a Discord Bot</a><ul>
+<li><a class="reference internal" href="#connect-your-bot-to-discord">Connect Your Bot to Discord</a></li>
+<li><a class="reference internal" href="#check-out-the-docs">Check out the Docs</a></li>
+<li><a class="reference internal" href="#respond-to-messages-with-text">Respond to Messages with Text</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+
+        <main id="page-content">
+            <section class="section" id="markov-chains-discord">
+<h1>Markov Chains: Discord</h1>
+<section class="section" id="introduction">
+<h2>Introduction</h2>
+<p>This exercise is all about having you practice how to create a virtual
+environment, use it to install external Python libraries, and keep secrets
+hidden from Git and GitHub. It’s important that you develop muscle memory around
+this process — you’ll be doing it a lot once we start learning to build web
+applications.</p>
+<p>Besides all of the above, you’ll also hook your Markov chain-based text
+generator script to Discord using a libarary called <cite>discord.py</cite> —
+a Python wrapper for the Discord API. Like most Python libraries, <cite>discord.py</cite>
+was created using object-oriented design principles so you’ll get some practice
+instantiating objects and calling methods as well.</p>
+<p>You’ll need a fully-functioning Markov chain program to proceed. Feel free to
+use your program from the previous lab. Otherwise, you can use the one we’ve
+included for you (it’s called <cite>markov.py</cite>).</p>
+</section>
+<section class="section" id="setup">
+<h2>Setup</h2>
+<p>Download the materials for this exercise <a class="reference external" href="https://ed.devmountain.com/materials/exercises/markov-discord.zip">here</a>.</p>
+</section>
+<section class="section" id="get-an-auth-token-keep-it-secret">
+<h2>Get an Auth Token &amp; Keep it Secret</h2>
+<section class="section" id="create-a-bot-account-on-discord">
+<h3>Create a Bot Account on Discord</h3>
+<p>You’ll have to create a bot account on Discord to be able to use <cite>discord.py</cite>
+and the Discord API in general.</p>
+<p>First, make sure you’re logged into <a class="reference external" href="https://discord.com" target="_blank">the Discord website</a>.
+Then, <a class="reference external" href="https://discord.com/developers/applications" target="_blank">click on this link to go to the Discord Developer Portal – Applications
+page</a>.</p>
+<p>Once you’re on the <cite>Applications</cite> page, click <cite>New Application</cite>. A popup window
+will appear to prompt you to name your application. The application name is
+there to help you distinguish between one app and another, so you can use
+whatever name you’d like as long as it’s memorable.</p>
+<img alt="_images/discord1.png" src="_images/discord1.png" style="width: 70%;" />
+<p>After naming your app, click <cite>Create</cite>.</p>
+<p>Now, navigate to the <cite>Bot</cite> section in the sidebar and click the <cite>Add Bot</cite> button
+on that page. A window will appear to ask you if you really want to create
+a bot. Click <cite>Yes do it!</cite>.</p>
+<p>On your bot’s page, give it a username — you should give it a username that’ll
+make it easy to find <em>your</em> bot out of a server of many bots. Something like
+<code class="docutils literal notranslate"><span class="pre">YourName's</span> <span class="pre">Markovbot</span></code> or <code class="docutils literal notranslate"><span class="pre">Yourname</span> <span class="pre">Markovbot</span></code> (if you share the same name
+as another student, you should add your last initial to the bot’s name) should
+do the trick.</p>
+<img alt="_images/discord2.png" src="_images/discord2.png" style="width: 70%;" />
+<p>After naming your bot, click <cite>Save Changes</cite>. Now you can copy your bot’s
+authentication token by clicking on <cite>Copy</cite>.</p>
+</section>
+<section class="section" id="keep-your-token-secret">
+<h3>Keep Your Token Secret</h3>
+<p>Your bot’s token is essentially its login password so you want to make sure it
+won’t get leaked publically. You’ll do this by creating a shell script called
+<cite>secrets.sh</cite>.</p>
+<p>Create a file called <cite>secrets.sh</cite> and open it in your editor. In the file,
+create an environment variable called <code class="docutils literal notranslate"><span class="pre">DISCORD_TOKEN</span></code> and set its value to
+your bot’s token that you copied from Discord. When you’re done, <cite>secrets.sh</cite>
+should look something like this:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">secrets.sh</span></div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">DISCORD_TOKEN</span><span class="o">=</span><span class="s2">&quot;pretend this is a real token&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Shell syntax</p>
+<div class="admonition-body docutils container">
+<p>Bash syntax is different than Python syntax. In Bash, it is not valid to have
+spaces before or after the equal sign (<code class="docutils literal notranslate"><span class="pre">=</span></code>), even though that’d be good
+style in Python. Also, the double-quotes are syntactically significant and
+different from single-quotes so make sure you use double-quotes as well!</p>
+</div>
+</div>
+<p>Now we have to keep <cite>secrets.sh</cite> out of Git so you don’t accidentally push it to
+GitHub. If you haven’t already initialize a Git repo for this exercise, go ahead
+and create one now. Also, create a repo on GitHub for this exercise as add it as
+a remote.</p>
+<p>Before you start <cite>git add</cite>-ing files, you’ll want to make a <cite>.gitignore</cite> file
+to prevent you from adding files like <cite>secrets.sh</cite>, <cite>env</cite> or <cite>.pyc</cite> files.
+Create a file called <cite>.gitignore</cite> and edit it in your editor so it looks like
+this:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">.gitignore</span></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>secrets.sh
+*.pyc
+env
+</pre></div>
+</div>
+</div>
+<p>If you run <cite>git status</cite>, your output won’t list <cite>secrets.sh</cite> or any other files
+that match the names in <cite>.gitignore</cite>. Now you’re safe to add the files you
+<em>do</em> want to track in Git (including <cite>.gitignore</cite>!). Make an initial commit and
+push your changes to GitHub. There, confirm via your web browser that
+<cite>secrets.sh</cite> wasn’t uploaded to your GitHub repo.</p>
+</section>
+</section>
+<section class="section" id="install-project-dependencies">
+<h2>Install Project Dependencies</h2>
+<p>Next, you’ll install <cite>discord.py</cite> in a virtual environment.</p>
+<p>Any time you want to
+work on projects that requires external libraries (libraries that aren’t a part
+of Python’s standard library), you’ll create a virtual environment for each one.
+That way, you can keep one project’s dependencies separate from another
+project’s dependencies.</p>
+<section class="section" id="create-and-activate-a-virtual-environment">
+<h3>Create and Activate a Virtual Environment</h3>
+<p>To create a virtual envrironment, make sure you’re in your project folder and
+run:</p>
+<div class="compare docutils container">
+<div class="docutils container">
+<p><strong>macOS</strong></p>
+<pre class="console literal-block">$ <span class="cmd">virtualenv env</span></pre>
+</div>
+<div class="docutils container">
+<p><strong>Windows</strong></p>
+<pre class="console literal-block">$ <span class="cmd">virtualenv env --always-copy</span></pre>
+</div>
+</div>
+<p>Before you can install or run anything, you’ll need to activate your virtual
+environment:</p>
+<pre class="console literal-block">$ <span class="cmd">source env/bin/activate</span></pre>
+</section>
+<section class="section" id="install-discord-py">
+<h3>Install <cite>discord.py</cite></h3>
+<p><cite>discord.py</cite> is a Python wrapper for the <a class="reference external" href="https://discord.com/developers/docs/reference" target="_blank">Discord API</a>.
+In this case, a <cite>Python API wrapper</cite> is a library that makes it easier to use an
+API (in this case, Discord’s API) in Python.</p>
+<p>Since <cite>discord.py</cite> is published in the <a class="reference external" href="https://pypi.org/project/discord.py/" target="_blank">Python Package Index (PyPI)</a>,
+we can install it with <span class="cmd">pip3</span>. You can either find out how to install anything
+on PyPI by <a class="reference external" href="https://pypi.org/project/discord.py/" target="_blank">checking out the package’s homepage on PyPI</a>. At the top of the page, you’ll see
+an example <cite>pip install</cite> command; in this case, we should run the command below
+to install <cite>discord.py</cite>:</p>
+<div class="admonition warning">
+<p class="admonition-title">Make sure your virtual environment is active!</p>
+<div class="admonition-body docutils container">
+<p>You can tell that you’re in a virtual environment by looking at your
+command line prompt. If you see an <code class="docutils literal notranslate"><span class="pre">(env)</span></code> somewhere in there, you’re good
+to go.</p>
+</div>
+</div>
+<pre class="console literal-block">(env) $ <span class="cmd">pip3</span> <span class="cmd">install discord.py</span></pre>
+</section>
+<section class="section" id="make-requirements-txt">
+<h3>Make <cite>requirements.txt</cite></h3>
+<p>Whenever you update a project’s external dependencies by installing new ones or
+updating old ones, you should create a new <cite>requirements.txt</cite> file. In the
+Python world, developers use a file called <cite>requirements.txt</cite> to document
+the libraries needed for a project. This makes it easy to get the project
+running on another computer.</p>
+<p>The standard way to generate <cite>requirements.txt</cite> is by redirecting output from
+<span class="cmd">pip3</span> <cite>freeze</cite>. Do that now by running:</p>
+<pre class="console literal-block">(env) $ <span class="cmd">pip3</span> <span class="cmd">freeze &gt; requirements.txt</span></pre>
+<p>The command above will create a new file called <cite>requirements.txt</cite> (or overwrite
+an existing one). Output its contents to the terminal with <cite>cat</cite>:</p>
+<pre class="console literal-block">(env) $ <span class="cmd">cat requirements.txt</span>
+aiohttp==3.6.2
+async-timeout==3.0.1
+attrs==19.3.0
+chardet==3.0.4
+discord.py==1.3.3
+(...snippet)</pre>
+<p><cite>requirements.txt</cite> is a list of the names and version numbers of all Python
+libraries required for your project to run; you should see <cite>discord.py</cite> in that
+list as well as the libraries that <cite>discord.py</cite> needs to run.</p>
+<p>You’ll want <cite>requirements.txt</cite> included in your repo, so use Git to add the
+file, commit it, and push it to GitHub.</p>
+</section>
+</section>
+<section class="section" id="make-a-discord-bot">
+<h2>Make a Discord Bot</h2>
+<p>Your next task is to make a Discord bot that will reply with generated text
+(using the functions from the <cite>Markov Chains</cite> lab) any time someone sends it
+a private message. Once you’ve gotten that working, you’ll be able to add more
+features and interactivity!</p>
+<section class="section" id="connect-your-bot-to-discord">
+<h3>Connect Your Bot to Discord</h3>
+<p>If you aren’t a mod on any Discord servers you are comfortable creating a bot for, you will need to create a new one for this next part. It’s really simple, just click the “+” icon at the bottom of your list of servers, and “Add a Server”. Just ensure you have full permissions so you can properly connect it to the Discord API.</p>
+<p>The last thing you’ll have to do in the Discord Developer console is generate
+a URL that will add your bot account to your Discord server. Otherwise,
+you won’t be able to run and test your code!</p>
+<p><a class="reference external" href="https://discord.com/developers/applications" target="_blank">Click here to go to the Applications page</a>.
+In the sidebar, click on <cite>OAuth2</cite> and look for a section called <cite>Scopes</cite>.</p>
+<p>There, click on the box for <cite>bot</cite> — this will give your application
+bot-related permissions. After the <cite>Bot Permissions</cite> box appears, check <cite>Send
+Messages</cite> and <cite>Manage Messages</cite> — your bot will need to read and write
+messages.</p>
+<img alt="_images/discord4.png" src="_images/discord4.png" style="width: 70%;" />
+<p>Finally, click on <cite>Copy</cite> to copy the generated URL and paste it into your
+browser. Click through the prompts that appear to invite your bot to your Discord
+server. When you’re done, you should see your bot in the server’s <cite>Member List</cite>.</p>
+</section>
+<section class="section" id="check-out-the-docs">
+<h3>Check out the Docs</h3>
+<p>You won’t be able to use <cite>discord.py</cite> until you know <em>how</em> to use it! Most
+libraries have their own websites where you’ll find tutorials on how to get
+started, documentation, and other useful technical details.</p>
+<p><cite>discord.py</cite>‘s homepage is at <a class="reference external" href="https://discordpy.readthedocs.io/en/latest/index.html" target="_blank">discordpy.readthedocs.io</a>.
+You’ve already installed <cite>discord.py</cite>, so you can skip the section on
+<cite>Installing</cite> and start reading <a class="reference external" href="https://discordpy.readthedocs.io/en/latest/quickstart.html" target="_blank">the Quickstart page</a> — like the name
+implies, it’s a short read <em>and</em> it will give you enough information to get
+started with this lab. Keep an eye out for explanations of how to send your
+authentication info through the API and how to send messages. Also, you’ll see
+two new keywords in the <cite>Quickstart</cite> — <code class="docutils literal notranslate"><span class="pre">async</span></code> and <code class="docutils literal notranslate"><span class="pre">await</span></code>. Don’t worry
+about what they do for now — we want you to use your preexisting knowledge of
+Python to figure out how to make something work even when you’re not
+<em>completely</em> familiar with code you’re given.</p>
+</section>
+<section class="section" id="respond-to-messages-with-text">
+<h3>Respond to Messages with Text</h3>
+<p>Refer to the example code in the Quickstart page to create a bot that will
+respond with text from a Markov chain whenever it recieves a message. Add your
+code to <cite>markov.py</cite> — feel free to use your own <cite>markov.py</cite> or the one we’ve
+included with this exercise. To test your code, run <cite>markov.py</cite>. Then, send your
+bot a message on Discord. You can exit <cite>markov.py</cite> with <cite>Ctrl-c</cite>.</p>
+<p><strong>If you need a hint</strong>, we have a hint on how to get started and another
+on how to use your secret token from <cite>secrets.sh</cite>:</p>
+<div class="admonition hint">
+<p class="admonition-title">How to get started</p>
+<details class="admonition-body"><summary></summary><div class="admonition-body docutils container">
+<p>First, you’ll need to import the <cite>os</cite> module (to access <cite>os.envrion</cite>, which
+you’ll use to access the values in <cite>secrets.sh</cite>) and the <cite>discord</cite> module.
+Add the import statements to the top of your file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">discord</span>
+</pre></div>
+</div>
+<p>Then, add this snippet to the end of your file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">discord</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">event</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_ready</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Successfully connected! Logged in as </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">event</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">author</span> <span class="o">==</span> <span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># TODO: replace this with your code</span>
+
+
+<span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;replace this with your token from secrets.sh&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The rest is up to you ☺</p>
+</div>
+</details></div>
+<div class="admonition hint">
+<p class="admonition-title">How to use <cite>secrets.sh</cite> and <cite>os.environ</cite></p>
+<details class="admonition-body"><summary></summary><div class="admonition-body docutils container">
+<p>You can retrieve the value of any environment variable through <cite>os.environ</cite>.
+It’s a dictionary-like object, which means you can index into it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DISCORD_TOKEN&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Or use methods like <cite>dict.get</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DISCORD_TOKEN&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Doing one of the above will return your token as a string that you can pass to
+<cite>client.run</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DISCORD_TOKEN&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Remember — <cite>os.environ</cite> won’t have a key called <code class="docutils literal notranslate"><span class="pre">'DISCORD_TOKEN'</span></code>
+until you run <cite>secrets.sh</cite> once (before you run your file in Python):</p>
+<pre class="console literal-block">(env) $ <span class="cmd">source secrets.sh</span></pre>
+</div>
+</details></div>
+<p><strong>You’re finished with the Markov Discord exercise! Great work.</strong></p>
+</section>
+</section>
+</section>
+
+        </main>
+
+        <footer id="page-footer">
+            <p>&copy; 2022 Devmountain</p>
+        </footer>
+      </div>
+
+      <script src="_static/main.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+  </body>
+</html>

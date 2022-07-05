@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Markov Chains: Discord: Solution | Devmountain Foundations</title>
+
+      <link
+        href="../_static/pygments.css"
+        rel="stylesheet"
+        type="text/css"
+      />
+      <link href="../_static/devmountain.css" rel="stylesheet" type="text/css" />
+          <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+          <link rel="stylesheet" type="text/css" href="../_static/devmountain.css" />
+          <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+          <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+
+      <script src="../_static/pdfobject.min.js"></script>
+      
+  </head>
+  <body>
+      <div id="handouts-container">
+        <header id="page-header">
+            <p id="project-title">Devmountain Foundations</p>
+            <p id="page-title">Markov Chains: Discord: Solution</p>
+              <p id="backlink">
+                <a href="/"> &laquo; Back to Homepage </a>
+              </p>
+        </header>
+
+        <nav id="page-toc"><ul>
+<li><a class="reference internal" href="#">Markov Chains: Discord: Solution</a><ul>
+<li><a class="reference internal" href="#solution">Solution</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+
+        <main id="page-content">
+            <section class="section" id="markov-chains-discord-solution">
+<h1>Markov Chains: Discord: Solution</h1>
+<section class="section" id="solution">
+<h2>Solution</h2>
+<p>Expand the box below to view the solution code for <cite>markov.py</cite>:</p>
+<div class="togglereveal "><details class="admonition-body"><summary></summary><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">markov.py</span></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;A Markov chain generator that can tweet random messages.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">discord</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
+
+
+<span class="k">def</span> <span class="nf">open_and_read_file</span><span class="p">(</span><span class="n">filenames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take list of files. Open them, read them, and return one long string.&quot;&quot;&quot;</span>
+
+    <span class="n">body</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="n">text_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="n">body</span> <span class="o">+</span> <span class="n">text_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">text_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">body</span>
+
+
+<span class="k">def</span> <span class="nf">make_chains</span><span class="p">(</span><span class="n">text_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take input text as string; return dictionary of Markov chains.&quot;&quot;&quot;</span>
+
+    <span class="n">chains</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text_string</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">words</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">chains</span><span class="p">:</span>
+            <span class="n">chains</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">chains</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">chains</span>
+
+
+<span class="k">def</span> <span class="nf">make_text</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="n">char_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take dictionary of Markov chains; return random text.&quot;&quot;&quot;</span>
+
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chains</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">while</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">chains</span><span class="p">:</span>
+        <span class="c1"># Keep looping until we have a key that isn&#39;t in the chains</span>
+        <span class="c1"># (which would mean it was the end of our original text).</span>
+        <span class="k">if</span> <span class="n">char_limit</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">char_limit</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Note that for long texts (like a full book), this might mean</span>
+        <span class="c1"># it would run for a very long time.</span>
+
+        <span class="n">word</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">chains</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">word</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+
+
+<span class="c1"># Get the filenames from the user through a command line prompt, ex:</span>
+<span class="c1"># python markov.py green-eggs.txt shakespeare.txt</span>
+<span class="n">filenames</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+<span class="c1"># Open the files and turn them into one long string</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">open_and_read_file</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
+
+<span class="c1"># Get a Markov chain</span>
+<span class="n">chains</span> <span class="o">=</span> <span class="n">make_chains</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">discord</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">event</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_ready</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Successfully connected! Logged in as </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">event</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">author</span> <span class="o">==</span> <span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">await</span> <span class="n">message</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">make_text</span><span class="p">(</span><span class="n">chains</span><span class="p">))</span>
+
+
+<span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DISCORD_TOKEN&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</details></div><p>To run the solution, make sure you have a virtual environment activated where
+you’ve installed <cite>discord.py</cite>. Then, add your Discord token to <cite>secrets.sh</cite> and
+run:</p>
+<pre class="literal-block">(env) $ <span class="cmd">source secrets.sh</span>
+(env) $ <span class="cmd">python3 markov.py</span></pre>
+</section>
+</section>
+
+        </main>
+
+        <footer id="page-footer">
+            <p>&copy; 2022 Devmountain</p>
+        </footer>
+      </div>
+
+      <script src="../_static/main.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+  </body>
+</html>
