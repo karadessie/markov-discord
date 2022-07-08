@@ -1,5 +1,8 @@
-from random import choice
+import os
+from urllib import response
+import discord
 
+from random import choice
 
 def open_and_read_file():
 
@@ -59,4 +62,24 @@ def main():
 
     print(random_text)
 
-main()
+    return(random_text)
+
+#################   DISCORD   #######################
+
+
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+
+@client.event
+async def on_ready():
+    print(f'Successfully connected! Logged in as {client.user}.')
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+       return
+    elif message.author != client.user or None:
+       await message.channel.send(main())
+
+os.environ.get('DISCORD_TOKEN')
+client.run(os.environ['DISCORD_TOKEN'])
